@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -89,22 +90,22 @@
                 </div>
 
                 <!-- Form Input -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20">
+                <div id="app" class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20">
                     <div class="lg:col-span-2 bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
                         <div class="mb-8">
                             <h3 class="text-[22px] font-bold text-brand-textDark mb-1">Input Fasilitas Baru</h3>
                             <p class="text-[13px] text-gray-500">Lengkapi data untuk publikasi di halaman pengunjung</p>
                         </div>
 
-                        <form action="/admin/facilities" method="POST" enctype="multipart/form-data" id="form-fasilitas" class="space-y-6">
+                        <form @submit.prevent="submitForm" enctype="multipart/form-data" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-[12px] font-bold text-gray-700 mb-2 tracking-wide uppercase">Nama Fasilitas</label>
-                                    <input type="text" name="nama" placeholder="Contoh: Kolam Arus Anak" class="w-full bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange transition-all" required>
+                                    <input type="text" v-model="form.nama" placeholder="Contoh: Kolam Arus Anak" class="w-full bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange transition-all" required>
                                 </div>
                                 <div>
                                     <label class="block text-[12px] font-bold text-gray-700 mb-2 tracking-wide uppercase">Kategori</label>
-                                    <select name="kategori" class="w-full bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange transition-all cursor-pointer">
+                                    <select v-model="form.kategori" class="w-full bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange transition-all cursor-pointer">
                                         <option value="utama">Utama</option>
                                         <option value="pendukung">Pendukung</option>
                                     </select>
@@ -112,13 +113,17 @@
                             </div>
                             <div>
                                 <label class="block text-[12px] font-bold text-gray-700 mb-2 tracking-wide uppercase">Deskripsi Fasilitas</label>
-                                <textarea name="deskripsi" placeholder="Jelaskan keunggulan dan detail fasilitas ini..." class="w-full min-h-[120px] bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange resize-none transition-all"></textarea>
+                                <textarea v-model="form.deskripsi" placeholder="Jelaskan keunggulan dan detail fasilitas ini..." class="w-full min-h-[120px] bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange resize-none transition-all"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-[12px] font-bold text-gray-700 mb-2 tracking-wide uppercase">Upload Gambar</label>
+                                <input type="file" @change="handleFileChange" accept="image/*" class="w-full bg-[#F8F9FA] border border-gray-200 text-gray-800 text-[14px] rounded-lg py-3 px-4 outline-none focus:ring-1 focus:ring-brand-orange transition-all">
                             </div>
 
                             <div class="flex justify-end items-center gap-6 pt-6">
-                                <button type="reset" class="text-[14px] font-bold text-gray-400 hover:text-gray-600 transition-colors">Batal</button>
-                                <button type="submit" class="bg-[#C6714A] hover:bg-[#b0623f] text-white font-bold px-10 py-3 rounded-xl transition-all shadow-md active:scale-95">
-                                    Simpan Fasilitas
+                                <button type="button" @click="resetForm" class="text-[14px] font-bold text-gray-400 hover:text-gray-600 transition-colors">Batal</button>
+                                <button type="submit" :disabled="loading" class="bg-[#C6714A] hover:bg-[#b0623f] disabled:bg-gray-400 text-white font-bold px-10 py-3 rounded-xl transition-all shadow-md active:scale-95">
+                                    {{ loading ? 'Menyimpan...' : 'Simpan Fasilitas' }}
                                 </button>
                             </div>
                         </form>
@@ -146,5 +151,76 @@
             </div>
         </div>
     </main>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    form: {
+                        nama: '',
+                        kategori: 'utama',
+                        deskripsi: '',
+                        gambar: null
+                    },
+                    loading: false
+                }
+            },
+            methods: {
+                handleFileChange(event) {
+                    this.form.gambar = event.target.files[0];
+                },
+                async submitForm() {
+                    if (!this.form.nama.trim()) {
+                        alert('Nama fasilitas harus diisi!');
+                        return;
+                    }
+
+                    this.loading = true;
+
+                    const formData = new FormData();
+                    formData.append('nama', this.form.nama);
+                    formData.append('kategori', this.form.kategori);
+                    formData.append('deskripsi', this.form.deskripsi);
+                    if (this.form.gambar) {
+                        formData.append('gambar', this.form.gambar);
+                    }
+
+                    try {
+                        const response = await fetch('/admin/facilities', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            alert('Fasilitas berhasil ditambahkan!');
+                            this.resetForm();
+                            // Reload page to show new facility
+                            location.reload();
+                        } else {
+                            alert('Gagal menambahkan fasilitas. Coba lagi.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan. Coba lagi.');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                resetForm() {
+                    this.form = {
+                        nama: '',
+                        kategori: 'utama',
+                        deskripsi: '',
+                        gambar: null
+                    };
+                    // Reset file input
+                    const fileInput = document.querySelector('input[type="file"]');
+                    if (fileInput) fileInput.value = '';
+                }
+            }
+        }).mount('#app');
+    </script>
 </body>
 </html>
