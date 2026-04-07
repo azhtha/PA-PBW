@@ -34,7 +34,13 @@ class App {
                 $dependencyClass = $type->getName();
                 $dependencies[] = self::make($dependencyClass);
             } else {
-                $dependencies[] = null; // For now, assume no scalar dependencies
+                if ($param->isDefaultValueAvailable()) {
+                    $dependencies[] = $param->getDefaultValue();
+                } elseif (isset(self::$container[$param->getName()])) {
+                    $dependencies[] = self::$container[$param->getName()];
+                } else {
+                    $dependencies[] = null;
+                }
             }
         }
 

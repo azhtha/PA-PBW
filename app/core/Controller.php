@@ -2,19 +2,33 @@
 namespace App\Core;
 
 class Controller {
-    protected $viewPath = 'app/views/';
+    protected $viewPath = __DIR__ . '/../views/';
 
     public function render($view, $data = [], $layout = null) {
         extract($data);
 
-        if ($layout) {
-            ob_start();
-            include $this->viewPath . $view . '.php';
-            $content = ob_get_clean();
-            include $this->viewPath . 'layouts/' . $layout . '.php';
-        } else {
-            include $this->viewPath . $view . '.php';
+        if (empty($this->viewPath)) {
+            $this->viewPath = __DIR__ . '/../views/';
         }
+
+        $viewFile = $this->viewPath . $view . '.php';
+
+        if ($layout) {
+            $layoutFile = $this->viewPath . 'layouts/' . $layout . '.php';
+
+            if (file_exists($layoutFile)) {
+                ob_start();
+                include $viewFile;
+                $content = ob_get_clean();
+                include $layoutFile;
+                return;
+            }
+
+            include $viewFile;
+            return;
+        }
+
+        include $viewFile;
     }
 
     public function redirect($path, $code = 302) {

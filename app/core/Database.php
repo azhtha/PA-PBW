@@ -1,6 +1,7 @@
 <?php
 namespace App\Core;
 
+use App\Exceptions\DatabaseException;
 use PDO;
 use PDOException;
 
@@ -21,8 +22,11 @@ class Database {
                 $config['options']
             );
         } catch (PDOException $e) {
-            $this->logger->error('Database connection failed: ' . $e->getMessage());
-            throw new DatabaseException('Database connection error');
+            $errorMsg = 'Database connection failed at ' . $config['host'] . ':' . $config['port'] . 
+                        ' for database ' . $config['database'] . ' with user ' . $config['username'] . 
+                        '. Error: ' . $e->getMessage();
+            $this->logger->error($errorMsg);
+            throw new DatabaseException('Database connection error: ' . $e->getMessage());
         }
     }
 
