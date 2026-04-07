@@ -12,6 +12,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
             
             <a href="index.php" class="text-[14px] font-semibold tracking-wide <?= ($current_page == 'index.php') ? 'text-[#E88D57]' : 'text-white hover:text-[#E88D57]' ?> transition-colors">Beranda</a>
             
+            <a href="tentang.php" class="text-[14px] font-semibold tracking-wide <?= ($current_page == 'tentang.php') ? 'text-[#E88D57]' : 'text-white hover:text-[#E88D57]' ?> transition-colors">Tentang Kami</a>
+            
             <a href="informasi.php" class="text-[14px] font-semibold tracking-wide <?= ($current_page == 'informasi.php') ? 'text-[#E88D57]' : 'text-white hover:text-[#E88D57]' ?> transition-colors">Informasi Umum</a>
             
             <a href="fasilitas.php" class="text-[14px] font-semibold tracking-wide <?= ($current_page == 'fasilitas.php') ? 'text-[#E88D57]' : 'text-white hover:text-[#E88D57]' ?> transition-colors">Fasilitas & Layanan</a>

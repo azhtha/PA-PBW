@@ -1,0 +1,112 @@
+/* Carousel Styles */
+
+/* Swiper Custom Styling */
+.carousel-swiper .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.carousel-swiper .swiper-pagination-bullet-active {
+    opacity: 1;
+    background-color: #E88D57;
+}
+
+.carousel-swiper .swiper-button-prev,
+.carousel-swiper .swiper-button-next {
+    color: inherit;
+    background: inherit;
+    width: inherit;
+    height: inherit;
+    margin-top: 0;
+    top: auto;
+    right: auto;
+    left: auto;
+}
+
+.carousel-swiper .swiper-button-prev::after,
+.carousel-swiper .swiper-button-next::after {
+    display: none;
+}
+
+/* Navigation Button Styles */
+.carousel-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-nav-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-nav-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: scale(1);
+}
+
+/* Thumbnail Navigation */
+.carousel-thumbnail {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-thumbnail img {
+    transition: transform 0.3s ease;
+}
+
+.carousel-thumbnail:hover img {
+    transform: scale(1.05);
+}
+
+.carousel-thumbnail:active {
+    transform: scale(0.98);
+}
+
+/* Image Counter */
+.carousel-counter {
+    font-weight: bold;
+    min-width: 24px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .carousel-nav-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .carousel-nav-btn i {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 640px) {
+    .carousel-nav-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .carousel-nav-btn i {
+        font-size: 12px;
+    }
+}
+
+/* Fade Effect for slides */
+.swiper-fade .swiper-slide {
+    pointer-events: none;
+}
+
+.swiper-fade .swiper-slide.swiper-slide-active {
+    pointer-events: auto;
+}
+
+/* Smooth transitions */
+.swiper-slide {
+    transition: opacity 0.3s ease;
+}
