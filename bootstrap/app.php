@@ -2,6 +2,12 @@
 // Bootstrap application
 require_once __DIR__ . '/../app/helpers/EnvHelper.php';
 
+if (!function_exists('env')) {
+    function env($key, $default = null) {
+        return App\Helpers\EnvHelper::env($key, $default);
+    }
+}
+
 // Simple autoloader
 spl_autoload_register(function ($class) {
     $prefix = 'App\\';
