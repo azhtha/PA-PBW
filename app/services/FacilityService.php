@@ -79,4 +79,8 @@ class FacilityService {
     public function getById($id) {
         return $this->facilityModel->find($id);
     }
+
+    public function getAll() {
+        return $this->facilityModel->getAllWithImages();
+    }
 }

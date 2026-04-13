@@ -1,4 +1,7 @@
 <?php
+// Start session first
+session_start();
+
 // Entry point for the application
 require_once __DIR__ . '/../bootstrap/app.php';
 
@@ -28,6 +31,21 @@ $router = new App\Core\Router();
 
 // Define routes
 $router->get('/', function() {
+    $homeView = __DIR__ . '/../app/views/public/index.php';
+    if (file_exists($homeView)) {
+        include $homeView;
+        return;
+    }
+    header('Location: /login');
+    exit;
+});
+
+$router->get('/beranda', function() {
+    $homeView = __DIR__ . '/../app/views/public/index.php';
+    if (file_exists($homeView)) {
+        include $homeView;
+        return;
+    }
     header('Location: /login');
     exit;
 });

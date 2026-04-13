@@ -24,7 +24,7 @@
 
 <body class="text-gray-800 antialiased bg-[#FAFAFB] flex flex-col min-h-screen">
 
-<?php include 'includes/navbar.php'; ?>
+<?php include __DIR__ . '/../../../includes/navbar.php'; ?>
 
 <!-- ✅ VUE ROOT -->
 <div id="app">
@@ -116,7 +116,7 @@
 
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/../../../includes/footer.php'; ?>
 
 <!-- SCRIPT VUE -->
 <script>

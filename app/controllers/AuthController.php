@@ -34,7 +34,7 @@ class AuthController extends Controller {
             Session::start();
             $this->render('auth/login', [
                 'error' => $result['error'],
-                'remaining_attempts' => $_SESSION['login_attempts'] ?? 0
+                'debugInfo' => $result['debug'] ?? null
             ], 'auth');
         }
     }

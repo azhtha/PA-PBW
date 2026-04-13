@@ -53,6 +53,12 @@
                 <i class="fa-solid fa-triangle-exclamation text-red-500 mt-0.5"></i>
                 <p class="text-red-500 text-xs font-bold leading-relaxed"><?= $error; ?></p>
             </div>
+            <script>
+                console.log('Login Error:', '<?= addslashes($error); ?>');
+                <?php if (!empty($debugInfo)) : ?>
+                console.log('Login Debug:', <?= json_encode($debugInfo, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>);
+                <?php endif; ?>
+            </script>
             <?php endif; ?>
 
             <form action="/login" method="POST" class="space-y-5 relative z-10">

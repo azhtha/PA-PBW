@@ -212,45 +212,58 @@
 
     <!-- Carousel Scripts -->
     <script>
-        // Initialize Swiper
-        const swiper = new Swiper('.carousel-swiper', {
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                renderBullet: function (index, className) {
-                    return '<span class="' + className + ' w-3 h-3 bg-white/60 hover:bg-white rounded-full cursor-pointer transition"></span>';
-                },
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            effect: 'fade',
-            fadeEffect: {
-                crossFade: true,
-            },
-            on: {
-                slideChange: function() {
-                    updateCounter();
-                }
+        window.addEventListener('load', function() {
+            if (typeof Swiper === 'undefined') {
+                console.error('Swiper library tidak ditemukan. Periksa koneksi CDN atau file Swiper.');
+                return;
             }
-        });
 
-        // Update counter
-        function updateCounter() {
-            const counter = document.querySelector('.carousel-counter');
-            counter.textContent = swiper.realIndex + 1;
-        }
+            const swiper = new Swiper('.carousel-swiper', {
+                loop: true,
+                speed: 700,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                touchRatio: 1.5,
+                grabCursor: true,
+                simulateTouch: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet: function (index, className) {
+                        return '<span class="' + className + ' w-3 h-3 bg-white/60 hover:bg-white rounded-full cursor-pointer transition"></span>';
+                    },
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                effect: 'slide',
+                on: {
+                    init: function() {
+                        updateCounter(this);
+                    },
+                    slideChange: function() {
+                        updateCounter(this);
+                    }
+                }
+            });
 
-        // Thumbnail click handler
-        document.querySelectorAll('.carousel-thumbnail').forEach((thumbnail, index) => {
-            thumbnail.addEventListener('click', () => {
-                swiper.slideTo(index);
+            function updateCounter(swiperInstance) {
+                const counter = document.querySelector('.carousel-counter');
+                if (!counter) return;
+                counter.textContent = (swiperInstance ? swiperInstance.realIndex : 0) + 1;
+            }
+
+            document.querySelectorAll('.carousel-thumbnail').forEach((thumbnail, index) => {
+                thumbnail.addEventListener('click', () => {
+                    if (typeof swiper.slideToLoop === 'function') {
+                        swiper.slideToLoop(index);
+                    } else {
+                        swiper.slideTo(index + swiper.loopedSlides);
+                    }
+                });
             });
         });
     </script>

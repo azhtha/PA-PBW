@@ -193,17 +193,25 @@
                             body: formData
                         });
 
-                        if (response.ok) {
-                            alert('Fasilitas berhasil ditambahkan!');
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            alert('✅ Fasilitas berhasil ditambahkan!');
                             this.resetForm();
                             // Reload page to show new facility
                             location.reload();
-                        } else {
-                            alert('Gagal menambahkan fasilitas. Coba lagi.');
+                        } else if (!response.ok || !data.success) {
+                            // Handle validation errors
+                            let errorMsg = data.error || 'Gagal menambahkan fasilitas';
+                            if (data.errors && typeof data.errors === 'object') {
+                                errorMsg = Object.values(data.errors).join('\n');
+                            }
+                            console.error('Server error:', data);
+                            alert('❌ Error:\\n' + errorMsg);
                         }
                     } catch (error) {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan. Coba lagi.');
+                        console.error('Fetch error:', error);
+                        alert('❌ Terjadi kesalahan koneksi. Cek console untuk detail.');
                     } finally {
                         this.loading = false;
                     }

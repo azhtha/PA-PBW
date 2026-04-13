@@ -40,7 +40,7 @@ class FacilityController extends Controller {
 
     public function store() {
         if (!$this->authService->isAuthenticated()) {
-            $this->redirect('/login');
+            $this->json(['success' => false, 'error' => 'Unauthorized'], 401);
         }
 
         $data = [
@@ -54,12 +54,9 @@ class FacilityController extends Controller {
         $result = $this->facilityService->create($data, $imageFile);
 
         if ($result['success']) {
-            $this->redirect('/admin/facilities');
+            $this->json(['success' => true, 'id' => $result['id'], 'message' => 'Fasilitas berhasil ditambahkan'], 201);
         } else {
-            $this->render('admin/facilities/form', [
-                'errors' => $result['errors'],
-                'old' => $data
-            ], 'admin');
+            $this->json(['success' => false, 'errors' => $result['errors']], 422);
         }
     }
 
@@ -78,7 +75,7 @@ class FacilityController extends Controller {
 
     public function update($id) {
         if (!$this->authService->isAuthenticated()) {
-            $this->redirect('/login');
+            $this->json(['success' => false, 'error' => 'Unauthorized'], 401);
         }
 
         $data = [
@@ -92,14 +89,9 @@ class FacilityController extends Controller {
         $result = $this->facilityService->update($id, $data, $imageFile);
 
         if ($result['success']) {
-            $this->redirect('/admin/facilities');
+            $this->json(['success' => true, 'id' => $id, 'message' => 'Fasilitas berhasil diperbarui'], 200);
         } else {
-            $facility = $this->facilityService->getById($id);
-            $this->render('admin/facilities/edit', [
-                'facility' => $facility,
-                'errors' => $result['errors'],
-                'old' => $data
-            ], 'admin');
+            $this->json(['success' => false, 'errors' => $result['errors']], 422);
         }
     }
 
